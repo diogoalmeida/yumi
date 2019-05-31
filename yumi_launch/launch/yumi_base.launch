@@ -6,6 +6,7 @@
   <arg name="arms_hardware_interface"/>
 
   <!-- Optional arguments -->
+  <arg name="load_description" default="true"/>
   <arg name="use_rviz" default="true"/>
   <arg name="name" default="yumi" doc="The robot name. Ensure this is the same name you give to the arm in the urdf instance."/>
   <arg name="ip" default="192.168.125.1"/>
@@ -18,7 +19,7 @@
 
   <!-- URDF / SRDF parameters -->
   <arg name="yumi_setup" default="default"/>
-  <param name="robot_description" command="$(find xacro)/xacro.py '$(find yumi_description)/urdf/yumi.urdf.xacro' arms_interface:=$(arg arms_hardware_interface) grippers_interface:=$(arg grippers_hardware_interface) yumi_setup:=$(arg yumi_setup)" />
+  <param name="robot_description" if="$(arg load_description)" command="$(find xacro)/xacro.py '$(find yumi_description)/urdf/yumi.urdf.xacro' arms_interface:=$(arg arms_hardware_interface) grippers_interface:=$(arg grippers_hardware_interface) yumi_setup:=$(arg yumi_setup)"/>
 
   <!-- Optoforce F/T sensor parameters -->
   <arg name="optodaq_pub_rate_hz" default="200.0"/>
