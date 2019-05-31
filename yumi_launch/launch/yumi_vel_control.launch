@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <launch>
+  <arg name="use_rviz" default="true"/>
   <!-- Load joint controller configurations from YAML file to parameter server -->
   <rosparam file="$(find yumi_control)/config/velocity_controllers.yaml" command="load" ns="/yumi"/>
   <arg name="arm_controllers" default="joint_state_controller
@@ -20,11 +21,13 @@
                                        force_torque_sensor_controller"/>
 
   <!-- EGM parameters -->
+  <rosparam file="$(find yumi_control)/config/ft_sensors_controllers.yaml" command="load" ns="/yumi"/>
   <rosparam file="$(find yumi_hw)/config/egm_rws_config.yaml" command="load" ns="/yumi/yumi_hw"/>
 
   <include file="$(find yumi_launch)/launch/yumi_base.launch">
     <arg name="egm" value="true"/>
     <arg name="arm_controllers" value="$(arg arm_controllers)"/>
     <arg name="arms_hardware_interface" value="VelocityJointInterface"/>
+    <arg name="use_rviz" value="$(arg use_rviz)"/>
   </include>
 </launch>

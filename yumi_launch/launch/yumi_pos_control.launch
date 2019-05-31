@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <launch>
+  <arg name="use_rviz" default="true"/>
   <rosparam file="$(find yumi_control)/config/position_controllers.yaml" command="load" ns="/yumi"/>
   <arg name="arm_controllers" default="joint_state_controller
                                        joint_pos_controller_1_r
@@ -18,9 +19,11 @@
                                        joint_pos_controller_6_l
                                        force_torque_sensor_controller"/>
 
+  <rosparam file="$(find yumi_control)/config/ft_sensors_controllers.yaml" command="load" ns="/yumi"/>
   <include file="$(find yumi_launch)/launch/yumi_base.launch">
     <arg name="egm" value="false"/>
     <arg name="arm_controllers" value="$(arg arm_controllers)"/>
     <arg name="arms_hardware_interface" value="PositionJointInterface"/>
+    <arg name="use_rviz" value="$(arg use_rviz)"/>
   </include>
 </launch>
