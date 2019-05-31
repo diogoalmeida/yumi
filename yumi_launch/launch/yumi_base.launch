@@ -20,10 +20,6 @@
   <arg name="yumi_setup" default="default"/>
   <param name="robot_description" command="$(find xacro)/xacro.py '$(find yumi_description)/urdf/yumi.urdf.xacro' arms_interface:=$(arg arms_hardware_interface) grippers_interface:=$(arg grippers_hardware_interface) yumi_setup:=$(arg yumi_setup)" />
 
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
-  	<remap from="/joint_states" to="/yumi/joint_states" />
-  </node>
-
   <!-- Optoforce F/T sensor parameters -->
   <arg name="optodaq_pub_rate_hz" default="200.0"/>
   <arg name="optodaq_filter" default="4"/>
@@ -53,7 +49,10 @@
       <rosparam param="source_list">["/yumi/joint_states", "/yumi/gripper_states"]</rosparam>
   </node>
 
-  <node name="yumi_robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+  <node name="yumi_robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
+    <param name="use_tf_static" value="false"/>
+    <param name="publish_frequency" value="250"/>
+  </node>
 
   <!-- Show robot in Rviz   -->
   <node if="$(arg use_rviz)" name="rviz" pkg="rviz" type="rviz" args="-d $(find yumi_description)/yumi.rviz"/>
