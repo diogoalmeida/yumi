@@ -4,6 +4,7 @@
   <arg name="arm_controllers"/>
   <arg name="arms_hardware_interface"/>
 
+  <arg name="load_description" default="true"/>
   <arg name="yumi_states_topic" default="/joint_states"/>
   <arg name="use_rviz" default="true"/>
   <arg name="name" default="yumi" doc="The robot name. Ensure this is the same name you give to the arm in the urdf instance."/>
@@ -27,15 +28,15 @@
                                         -J yumi_joint_7_r -0.71"/>
 
   <rosparam file="$(find yumi_control)/config/gripper_controllers.yaml" command="load" ns="/yumi"/>
-  <!-- <param name="robot_description" command="$(find xacro)/xacro.py '$(find yumi_description)/urdf/yumi.urdf.xacro' arms_interface:=$(arg arms_hardware_interface) grippers_interface:=$(arg grippers_hardware_interface) yumi_setup:=$(arg yumi_setup)" /> -->
+  <param name="robot_description" if="$(arg load_description)" command="$(find xacro)/xacro.py '$(find yumi_description)/urdf/yumi.urdf.xacro' arms_interface:=$(arg arms_hardware_interface) grippers_interface:=$(arg grippers_hardware_interface) yumi_setup:=$(arg yumi_setup)" />
 
   <node name="gripper_controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="$(arg gripper_controllers)" ns="/yumi"/>
   <node name="arm_controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="$(arg arm_controllers)" ns="/yumi"/>
-  <!-- <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg yumi_model) $(arg yumi_initial_pos) -param robot_description -unpause"  respawn="false" output="screen" /> -->
+  <node name="spawn_urdf" if="$(arg load_description)" pkg="gazebo_ros" type="spawn_model" args="-urdf -model yumi_base $(arg yumi_initial_pos) -param robot_description -unpause"  respawn="false" output="screen" />
 
   <!-- Configuration for debug  -->
   <arg name="debug" default="false"/>
-  <arg name="paused" default="true"/>
+  <arg name="paused" default="false"/>
   <arg unless="$(arg debug)" name="launch_prefix" value="" />
   <arg if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
 
@@ -53,7 +54,6 @@
     <rosparam param="source_list">["/yumi/joint_states", "/yumi/gripper_states"]</rosparam>
   </node>
   <node name="yumi_robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
-    <remap from="/joint_states" to="$(arg yumi_states_topic)"/>
   </node>
   <node name="grippers_remapper" pkg="yumi_hw" type="gazebo_grippers_remap.py" />
 
