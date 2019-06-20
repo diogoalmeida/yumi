@@ -192,6 +192,9 @@ int main( int argc, char** argv )
     period = now - prev;
     prev = ros::Time::now();
 
+    // period = now - prev;
+    // prev = ros::Time::now();
+
     /* Read the state from YuMi */
     yumi_robot->read(now, period);
     yumi_robot->readFTsensors();
@@ -204,7 +207,11 @@ int main( int argc, char** argv )
 
     // std::cout << "Control loop period is " << period.toSec() * 1000 << " ms" << std::endl;
     control_period_pub.publish(period.toSec());
+<<<<<<< HEAD
     rate.sleep();
+=======
+    // rate.sleep();
+>>>>>>> f2844df69dc2244ff64e7eeaf5311c98429e1c42
 
   }
 
